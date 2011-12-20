@@ -99,6 +99,7 @@ Function showColumnedNews2(totnum,sqladd,headcol)
 		Response.Write  "		<tr valign=""top"">" & vbCr
 		do while not rsHead.EOF
 			'lastid = rsHead("id")
+			if lastid = 0 then lastid = "" ' turn this into an empty string. Otherwise, adds 0 to our first ID , making it incorrect!
 			lastid = lastid & trim(rsHead("id")) & "," ' this adds ID to 'lastid' with comma, turns 'lastid' into a CSV string. 
 			' Ideally this should be able to be passed back as a 'WHERE NOT IN  (..) ' clause within the sqladd argument
 			sql = "SELECT CatDesc FROM tblCat " & _
