@@ -90,7 +90,7 @@ Function showColumnedNews2(totnum,sqladd,headcol)
 	'sql = sql & " ORDER BY priority DESC, picture DESC, TblStories.ID DESC "
 	sql = sql & " AND embargo <= GETDATE() " ' add embargo (if no embargo, the data will be 01/01/1900 00:00:00)
 	sql = sql & " ORDER BY priority DESC, TblStories.ID DESC "
-	'Response.Write "<!--" & sql & "-->"
+	Response.Write "<!--" & sql & "-->"
 	set rsHead = Server.CreateObject("ADODB.Recordset")
 	Call rsHead.Open(sql, oDBNews, 3)
 	if not rsHead.BOF then
@@ -98,7 +98,9 @@ Function showColumnedNews2(totnum,sqladd,headcol)
 		lastid = 0
 		Response.Write  "		<tr valign=""top"">" & vbCr
 		do while not rsHead.EOF
-			lastid = rsHead("id")
+			'lastid = rsHead("id")
+			lastid = lastid & trim(rsHead("id")) & "," ' this adds ID to 'lastid' with comma, turns 'lastid' into a CSV string. 
+			' Ideally this should be able to be passed back as a 'WHERE NOT IN  (..) ' clause within the sqladd argument
 			sql = "SELECT CatDesc FROM tblCat " & _
 			" JOIN tblStoriesCat ON tblStoriesCat.CatID = tblCat.CatID " & _
 			" WHERE tblStoriesCat.StoryID = '" & rsHead("id") & "' "
@@ -121,6 +123,8 @@ Function showColumnedNews2(totnum,sqladd,headcol)
 			tmpCnt = tmpCnt + 1
 		loop
 	end if
+	' lastid might end up a bit messy. Lets clean it up before returning it.
+	If Right(lastid,1) = "," then lastid = Left(lastid,Len(lastid)-1)
 	Response.Write  "</table>" & vbCr
 	toReturn = lastid
 	showColumnedNews2 = toReturn

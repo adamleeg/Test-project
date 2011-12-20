@@ -100,7 +100,15 @@
 					<td width="42%">
 							<h2>Latest News</h2>
 							<br>
-							<% Response.Write showPriNews(1,2,5,"AND intChannel=0 and tblStories.ID < '" & lastid & "' ","red_head2") %>
+							<%
+							dim sqlStr : sqlStr = "" ' init var and blank it
+							if InStr(lastid,",")>0 then ' test for a comma existing in this string. If so, that means it's a CSV.
+								' Make an SQL statement with a NOT IN (...) clause
+								sqlStr = "AND intChannel='0' AND tblStories.ID NOT IN (" & lastid & ") "
+							else ' Not a CSV ? Change the SQL statement, then
+								sqlStr = "AND intChannel='0' tblStories.ID < '" & lastid & "' "
+							end if	
+							Response.Write showPriNews(1,2,5,sqlStr,"red_head2") %>
 							<div class="see-all"><a href="<%=siteURL%>/news">See all news&nbsp;»</a></div>
 							<!-- latest news END -->
 					</td>
