@@ -232,7 +232,7 @@ Function showPriNews(style,npics,totnum,sqladd,headcol)
 	'sql = sql & " ORDER BY priority DESC, picture DESC, TblStories.ID DESC "
 	sql = sql & " AND embargo <= GETDATE() " ' add embargo (if no embargo, the data will be 01/01/1900 00:00:00)
 	sql = sql & " ORDER BY priority DESC, TblStories.ID DESC "
-	
+	Response.Write sql & "<br>"
 	set rsHead = Server.CreateObject("ADODB.Recordset")
 	Call rsHead.Open(sql, oDBNews, 3)
 	if not rsHead.BOF then
